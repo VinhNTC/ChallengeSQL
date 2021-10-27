@@ -56,3 +56,34 @@ where clb.MATINH = t.MATINH and
 	bxh.HANG = 1 and bxh.VONG = 3 
 	and bxh.NAM = 2009
 --Cau 8
+go
+select hlv.TENHLV
+from HUANLUANVIEN hlv, HLV_CLB hlv_clb
+where hlv.MAHLV = hlv_clb.MAHLV and
+		hlv.DIENTHOAI like ''
+--Cau 9
+go
+select hlv.MAHLV, hlv.TENHLV
+from HUANLUANVIEN hlv, QUOCGIA qg, HLV_CLB hlv_clb
+where hlv.MAHLV = hlv_clb.MAHLV and
+		hlv.MAQG = qg.MAQG and
+		qg.TENQG like N'%Việt Nam%' and
+		hlv_clb.VAITRO like ''
+--Cau 10
+go
+select ct.MACT, ct.HOTEN, bxh.HANG
+from CAUTHU ct, CAULACBO clb, BANGXH bxh
+where ct.MACLB = clb.MACLB and
+		clb.MACLB = bxh.MACLB and
+		bxh.VONG = 3 and bxh.NAM = 2009 and
+		(bxh.HANG < 3 or bxh.HANG > 6)
+--Cau 11
+go
+select td.NGAYTD, svd.TENSAN, clb.TENCLB, td.KETQUA
+from TRANDAU td, SANVD svd, CAULACBO clb, BANGXH bxh
+where td.MACLB1 = clb.MACLB and
+	td.MASAN = svd.MASAN and
+	clb.MACLB = bxh.MACLB and
+	bxh.HANG = 1 and bxh.VONG = 3 and
+	bxh.NAM = 2009
+	
