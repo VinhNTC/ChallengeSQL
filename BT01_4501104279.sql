@@ -30,3 +30,29 @@ where hlv.MAHLV = hlv_clb.MAHLV and
 		and hlv.MAQG = qg.MAQG
 		and qg.TENQG like N'%Việt Nam%'
 --Cau 5
+go
+select clb.MACLB, TENCLB, svd.TENSAN, svd.DIACHI, COUNT(ct.MACT) as SOLUONGNGOAIBINH
+from CAULACBO clb, SANVD svd, CAUTHU ct, QUOCGIA qg
+where clb.MACLB = ct.MACLB and
+		clb.MASAN = svd.MASAN and
+		ct.MAQG = qg.MAQG and
+		qg.TENQG <> N'Việt Nam'
+group by qg.MAQG, clb.MACLB, TENCLB, TENSAN, svd.DIACHI
+having COUNT(ct.MACT) >= 2
+--Cau 6
+go
+select t.TENTINH, COUNT(ct.MACT) as SOLUONGCAUTHU
+from TINH t, CAUTHU ct, CAULACBO clb
+where t.MATINH = clb.MATINH and
+	ct.MACLB = clb.MACLB and
+	ct.VITRI like N'Tiền Đạo'
+group by t.TENTINH
+--Cau 7
+go
+select clb.TENCLB, t.TENTINH
+from CAULACBO clb, TINH t, BANGXH bxh
+where clb.MATINH = t.MATINH and
+	clb.MACLB = bxh.MACLB and
+	bxh.HANG = 1 and bxh.VONG = 3 
+	and bxh.NAM = 2009
+--Cau 8
