@@ -79,11 +79,49 @@ where ct.MACLB = clb.MACLB and
 		(bxh.HANG < 3 or bxh.HANG > 6)
 --Cau 11
 go
-select td.NGAYTD, svd.TENSAN, clb.TENCLB, td.KETQUA
-from TRANDAU td, SANVD svd, CAULACBO clb, BANGXH bxh
-where td.MACLB1 = clb.MACLB and
-	td.MASAN = svd.MASAN and
-	clb.MACLB = bxh.MACLB and
-	bxh.HANG = 1 and bxh.VONG = 3 and
-	bxh.NAM = 2009
+select td.NGAYTD, svd.TENSAN, clb1.TENCLB, clb2.TENCLB, td.KETQUA
+from TRANDAU td, SANVD svd, CAULACBO clb1, CAULACBO clb2, BANGXH bxh
+where clb1.MACLB = td.MACLB1 and
+		clb2.MACLB = td.MACLB2 and
+		td.MASAN = svd.MASAN and
+		clb1.MACLB = bxh.MACLB and
+		bxh.HANG = 1 and bxh.VONG <= 3 and bxh.NAM = 2009
+--Cau 12
+go
+select td.NGAYTD, clb1.TENCLB as tenclb1, clb2.TENCLB as tenclb2, td.KETQUA
+from TRANDAU td, CAULACBO clb1, CAULACBO clb2, SANVD svd
+where clb1.MACLB = td.MACLB1 and
+		clb2.MACLB = td.MACLB2 and
+		clb1.MASAN = svd.MASAN and
+		MONTH(td.NGAYTD) = 3 and
+		td.KETQUA like '%0'
+--Cau 13
+go 
+select ct.MACT, ct.HOTEN, ct.NGAYSINH
+from CAUTHU ct
+where ct.HOTEN like N'%Công%' 
+--Cau 14
+go
+select ct.MACT, ct.HOTEN, ct.NGAYSINH
+from CAUTHU ct
+where ct.HOTEN not like N'%Nguyễn%' 
+--Cau 15
+go
+select hlv.MAHLV, hlv.NGAYSINH, hlv.TENHLV, hlv.DIACHI
+from HUANLUANVIEN hlv, QUOCGIA qg
+where hlv.MAQG = qg.MAQG and
+	hlv.MAQG like N'%VN' and
+	YEAR(GETDATE()) - YEAR(hlv.NGAYSINH) between 35 and 40
+--Cau 16
+go
+select clb.TENCLB, hlv.TENHLV
+from CAULACBO clb, HUANLUANVIEN hlv, HLV_CLB hlv_clb
+where clb.MACLB = hlv_clb.MACLB and
+		hlv_clb.MAHLV = hlv.MAHLV and
+		hlv_clb.VAITRO = 'HLV Chính' and
+		DAY(hlv.NGAYSINH) = 20 and MONTH(hlv.NGAYSINH) = 5
+--Cau 17
+go
+
+
 	
