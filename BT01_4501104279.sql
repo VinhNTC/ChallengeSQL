@@ -122,6 +122,21 @@ where clb.MACLB = hlv_clb.MACLB and
 		DAY(hlv.NGAYSINH) = 20 and MONTH(hlv.NGAYSINH) = 5
 --Cau 17
 go
+select clb.TENCLB, t.TENTINH, sum(tg.SOTRAI) as SoBT
+from TRANDAU td join THAMGIA tg on td.MATRAN = tg.MATD
+				join CAUTHU ct on tg.MACT = ct.MACT
+				join CAULACBO clb on ct.MACLB = clb.MACLB
+				join TINH t on clb.MATINH = t.MATINH
+where td.NAM = 2009
+group by clb.TENCLB, t.TENTINH
+having sum(tg.SOTRAI) > = 
+			(select Max(SoBT) from (
+				select clb.MACLB, sum(tg.SOTRAI) as SoBT
+				from TRANDAU td join THAMGIA tg on td.MATRAN = tg.MATD
+								join CAUTHU ct on tg.MACT = ct.MACT
+								join CAULACBO clb on ct.MACLB = clb.MACLB
+				where td.NAM = 2009
+				group by clb.MACLB) t)
 
 
 	
