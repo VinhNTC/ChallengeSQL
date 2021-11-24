@@ -137,6 +137,63 @@ having sum(tg.SOTRAI) > =
 								join CAULACBO clb on ct.MACLB = clb.MACLB
 				where td.NAM = 2009
 				group by clb.MACLB) t)
-
-
-	
+--Cau 18
+go
+select clb.MACLB, clb.TENCLB, svd.TENSAN, svd.DIACHI, COUNT(ct.MACT) as SOLUONGCAUTHU
+from SANVD svd join CAULACBO clb on svd.MASAN = clb.MASAN
+				join CAUTHU ct on clb.MACLB = ct.MACLB
+where ct.MAQG not like '%VN%' and
+		clb.MACLB in(
+		select MACLB from(
+			select clb.MACLB, COUNT(ct.MACT) as SOLUONG
+				from CAULACBO clb join CAUTHU ct on clb.MACLB = ct.MACLB
+				where ct.MAQG not like '%VN%'
+				group by clb.MACLB
+				having COUNT(ct.MACT) >= 2) t1)
+group by clb.MACLB, clb.TENCLB, svd.TENSAN, svd.DIACHI
+having COUNT(ct.MACT) >= 2
+--Cau 19
+go
+select MACLB, cast(LEFT(HIEUSO, CHARINDEX('-', HIEUSO) - 1) as int) - cast(RIGHT(HIEUSO, len(HIEUSO) - charindex('-', HIEUSO)) as int) as SOBANTHANG
+from BANGXH
+where NAM = 2009
+order by SOBANTHANG desc
+--Cau 20
+go
+select td.NGAYTD, svd.TENSAN, clb1.TENCLB as CLB1, clb2.TENCLB as CLB2, td.KETQUA
+from TRANDAU td join SANVD svd on td.MASAN = svd.MASAN
+				join CAULACBO clb1 on td.MACLB1 = clb1.MACLB
+				join CAULACBO clb2 on td.MACLB2 = clb2.MACLB
+where clb1.TENCLB = 
+	(select TOP 1 clb.TENCLB
+	from CAULACBO clb join BANGXH bxh on bxh.MACLB = clb.MACLB
+	where bxh.VONG = 3 and bxh.NAM = 2009
+	order by bxh.HANG desc) 
+	or clb2.TENCLB = 
+	(select TOP 1 clb.TENCLB
+	from CAULACBO clb join BANGXH bxh on bxh.MACLB = clb.MACLB
+	where bxh.VONG = 3 and bxh.NAM = 2009
+	order by bxh.HANG desc) 
+--Cau 21
+go
+SELECT c.MACLB, c.TENCLB
+FROM TRANDAU t JOIN CAULACBO c ON t.MACLB1 = c.MACLB
+WHERE t.NAM = 2009
+GROUP BY c.MACLB, c.TENCLB
+HAVING COUNT(DISTINCT t.MACLB2) = 
+								(SELECT COUNT(*) - 1 FROM CAULACBO)
+EXCEPT
+SELECT c.MACLB, c.TENCLB
+FROM TRANDAU t JOIN CAULACBO c ON t.MACLB2 = c.MACLB
+WHERE t.NAM = 2009
+GROUP BY c.MACLB, c.TENCLB
+HAVING COUNT(DISTINCT t.MACLB1) = 
+								(SELECT COUNT(*) - 1 FROM CAULACBO)
+--Cau 22
+go
+SELECT c.MACLB, c.TENCLB
+FROM TRANDAU t JOIN CAULACBO c ON t.MACLB1 = c.MACLB	
+WHERE t.NAM = 2009
+GROUP BY c.MACLB, c.TENCLB
+HAVING COUNT(DISTINCT t.MACLB2) = 
+								(SELECT COUNT(*) - 1 FROM CAULACBO)

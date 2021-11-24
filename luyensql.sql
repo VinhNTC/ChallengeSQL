@@ -55,10 +55,6 @@ select TOP (1) sv.TENSV
 from SVIEN sv join KQUA kq on sv.MASV = kq.MASV
 order by kq.DIEM desc
 --CAU 11
-go
-select *
-from SVIEN sv join KQUA kq on sv.MASV = kq.MASV
-			join HPHAN hp on kq.MAHP = hp.MAHP
-			join MHOC mh on hp.MAMH = mh.MAMH
+
 
 
